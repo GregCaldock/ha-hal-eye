@@ -24,7 +24,7 @@ There are two [button-card](https://github.com/custom-cards/button-card) templat
 
 ## Requirements
 
-- [button-card](https://github.com/custom-cards/button-card), installed from HACS.
+- [button-card](https://github.com/custom-cards/button-card), installed from HACS. Version 7 or later is recommended; older versions work, but see the note under [Options](#options).
 - An Assist satellite, meaning an `assist_satellite.*` entity. Examples are an ESPHome satellite (Atom Echo, Home Assistant Voice PE…) or a Wyoming satellite.
 
 That's all. It needs no other integrations or JavaScript files.
@@ -36,8 +36,10 @@ The templates go under your dashboard's `button_card_templates:` key.
 **Dashboards in YAML mode:** copy `hal-eye.yaml` to `config/button_card_templates/hal-eye.yaml`, then add this at the top of the dashboard:
 
 ```yaml
-button_card_templates: !include_dir_merge_named button_card_templates
+button_card_templates: !include_dir_merge_named /config/button_card_templates
 ```
+
+Use the absolute `/config/...` path. A relative path is resolved from the dashboard file's own folder, which breaks for any dashboard not kept in `config/`.
 
 If you already have a `button_card_templates:` section, paste both templates from `hal-eye.yaml` into it.
 
@@ -72,7 +74,7 @@ All of these are optional. Set them under `variables:`.
 | `active_entity` | overlay | none | Decides when the overlay shows, in place of the satellite state. Use the [linger helper](extras/linger.yaml) so the eye stays up a few seconds after HAL finishes. If the entity doesn't exist, the overlay falls back to the satellite state. |
 | `mute_entity` | overlay | none | While this entity is `on`, the overlay never shows, including for announcements. |
 
-> **Important:** button-card only redraws automatically when the card's own `entity` changes. If you set any of the entities above, list them under `triggers_update:` too, as in [examples/overlay.yaml](examples/overlay.yaml).
+> **On button-card 7 or later**, every entity the templates read is tracked automatically, so there's nothing more to do. **On older versions**, also list any entities you set above under `triggers_update:` (see [examples/overlay.yaml](examples/overlay.yaml)), or the card won't redraw when they change.
 
 ## How it works
 
@@ -90,7 +92,7 @@ The overlay relies on two simple tricks:
 - **The overlay never shows.** Check the `entity:` ID in Developer Tools → States. Then say the wake word and watch its state change. If you set `active_entity`, check that entity actually turns `on`.
 - **It only covers some views.** The overlay only exists on views that contain it, so add the card to each view.
 - **It doesn't show on a panel view.** A panel view renders only its first card. Put the overlay inside that card, for example as the first card of a `vertical-stack`.
-- **It reacts late to my mute or TTS flag.** Add those entities to `triggers_update:`.
+- **It reacts late to my mute or TTS flag.** Update to button-card 7 or later, or list those entities under `triggers_update:`.
 - **The eye keeps speaking after the voice stops.** The eye follows the satellite's `responding` state. If you send the reply audio to a different speaker than the satellite's own, `responding` can end before or after the speech you hear.
 
 ## Not included (yet)

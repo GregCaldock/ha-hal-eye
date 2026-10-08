@@ -1,7 +1,9 @@
 # Keeps the overlay up for a few seconds after HAL stops talking, instead of
-# vanishing the instant the satellite goes idle. Add under `template:` in
-# configuration.yaml (or a package), replace YOUR_SATELLITE, then set
+# vanishing the instant the satellite goes idle. Save this file as a package
+# (config/packages/hal_linger.yaml), replace YOUR_SATELLITE, then set
 # `active_entity: binary_sensor.hal_active` on the overlay card.
+# Already have a `template:` section? Paste just the `- binary_sensor:` item into
+# that list instead. Don't add a second `template:` key.
 template:
   - binary_sensor:
       - name: "HAL Active"

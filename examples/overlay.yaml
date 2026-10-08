@@ -1,7 +1,8 @@
 # Drop this card anywhere in a view. It takes no space while hidden and covers
 # the whole screen (header + sidebar too) while HAL is active.
-# Minimal version: just `template` + `entity`. Everything under `variables` is optional —
-# if you use any of them, also list them in `triggers_update` so the card redraws.
+# Minimal version: just `template` + `entity`. Everything under `variables` is optional.
+# triggers_update is only needed on button-card < 7 (7+ tracks these entities
+# automatically); it is harmless to keep.
 type: custom:button-card
 template: hal_eye_overlay
 entity: assist_satellite.YOUR_SATELLITE

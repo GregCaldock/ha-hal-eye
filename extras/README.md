@@ -2,20 +2,27 @@
 
 You don't need any of these for the eye to work.
 
+Several of these install as **packages**. If you haven't used packages before, add this to `configuration.yaml` once:
+
+```yaml
+homeassistant:
+  packages: !include_dir_named packages
+```
+
 ## Linger helper
 
 By default the overlay vanishes the moment the satellite goes idle. [`linger.yaml`](linger.yaml) is a template binary sensor that stays `on` for 4 seconds after HAL finishes, which feels much more natural.
 
-1. Add it to `configuration.yaml`, or to a package, and replace `YOUR_SATELLITE` with your satellite's entity ID.
-2. Restart HA, or reload *Template entities* in Developer Tools → YAML.
+1. Save it as a package, `config/packages/hal_linger.yaml`, and replace `YOUR_SATELLITE` with your satellite's entity ID. If you already have a `template:` section in `configuration.yaml`, you can paste just the `- binary_sensor:` item into that list instead. Don't add a second `template:` key, or HA will silently ignore one of them.
+2. Restart HA.
 3. On the overlay card:
 
 ```yaml
 variables:
   active_entity: binary_sensor.hal_active
-triggers_update:
-  - binary_sensor.hal_active
 ```
+
+On button-card versions older than 7, also add `binary_sensor.hal_active` under `triggers_update:`.
 
 ## Film lines
 
