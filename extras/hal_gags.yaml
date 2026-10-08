@@ -1,0 +1,22 @@
+# Save as config/custom_sentences/en/hal_gags.yaml
+language: "en"
+intents:
+  HalGagPodBayDoors:
+    data:
+      - sentences:
+          - "[HAL] open the pod bay door[s]"
+  HalGagHello:
+    data:
+      - sentences:
+          - "hello HAL"
+          - "[HAL] are you there"
+          - "[HAL] do you read me"
+  HalGagProblem:
+    data:
+      - sentences:
+          - "[HAL] what's the problem"
+          - "[HAL] what is the problem"
+  HalGagDaisy:
+    data:
+      - sentences:
+          - "[HAL] sing [me] a song"

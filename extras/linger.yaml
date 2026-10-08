@@ -1,0 +1,13 @@
+# Keeps the overlay up for a few seconds after HAL stops talking, instead of
+# vanishing the instant the satellite goes idle. Add under `template:` in
+# configuration.yaml (or a package), replace YOUR_SATELLITE, then set
+# `active_entity: binary_sensor.hal_active` on the overlay card.
+template:
+  - binary_sensor:
+      - name: "HAL Active"
+        unique_id: hal_active
+        state: >
+          {{ states('assist_satellite.YOUR_SATELLITE')
+             in ['listening', 'processing', 'responding'] }}
+        delay_off:
+          seconds: 4

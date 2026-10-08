@@ -79,7 +79,7 @@ test("structure: chaining, defaults, fixed overlay", () => {
 
 test("hygiene: no house-specific strings in the repo files", () => {
   const banned = /m5stack|hal_office|hal_kitchen|hal_muted|hal_announcing|caldock\.com|office_lights|patmore/i;
-  for (const f of ["hal-eye.yaml"]) {
+  for (const f of ["hal-eye.yaml", "extras/linger.yaml", "extras/hal_gags.yaml", "extras/hal_package.yaml"]) {
     assert.doesNotMatch(readFileSync(new URL(`../${f}`, import.meta.url), "utf8"), banned, f);
   }
 });
