@@ -79,7 +79,18 @@ test("structure: chaining, defaults, fixed overlay", () => {
 
 test("hygiene: no house-specific strings in the repo files", () => {
   const banned = /m5stack|hal_office|hal_kitchen|hal_muted|hal_announcing|caldock\.com|office_lights|patmore/i;
-  for (const f of ["hal-eye.yaml", "extras/linger.yaml", "extras/hal_gags.yaml", "extras/hal_package.yaml"]) {
+  for (const f of ["hal-eye.yaml", "extras/linger.yaml", "extras/hal_gags.yaml", "extras/hal_package.yaml",
+    "README.md", "extras/README.md", "examples/panel-view.yaml", "examples/overlay.yaml"]) {
     assert.doesNotMatch(readFileSync(new URL(`../${f}`, import.meta.url), "utf8"), banned, f);
+  }
+});
+
+test("examples use the templates and list optional entities in triggers_update", () => {
+  const panel = loadYaml("examples/panel-view.yaml");
+  assert.equal(panel.cards[0].template, "hal_eye");
+  const ov = loadYaml("examples/overlay.yaml");
+  assert.equal(ov.template, "hal_eye_overlay");
+  for (const k of ["active_entity", "speaking_entity", "mute_entity"]) {
+    assert.ok(ov.triggers_update.includes(ov.variables[k]), k);
   }
 });

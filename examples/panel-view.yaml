@@ -1,0 +1,8 @@
+# A dedicated HAL view — add to your dashboard's `views:` list.
+title: HAL
+path: hal
+type: panel
+cards:
+  - type: custom:button-card
+    template: hal_eye
+    entity: assist_satellite.YOUR_SATELLITE
