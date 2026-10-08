@@ -1,0 +1,79 @@
+# HAL-9000 eye for Home Assistant — custom:button-card templates.
+# https://github.com/GregCaldock/ha-hal-eye  (MIT)
+#
+#   hal_eye          the eye; animates with an assist_satellite's state
+#   hal_eye_overlay  hal_eye as a full-screen takeover, shown only while active
+#
+# Put both under your dashboard's `button_card_templates:` (see README).
+
+hal_eye:
+  show_icon: false
+  show_name: false
+  show_label: false
+  tap_action:
+    action: none
+  variables:
+    eye_size: 38vw         # eye width (any CSS length)
+    speaking_entity: ""    # optional: entity that is `on` while TTS announcements play
+  custom_fields:
+    face: |
+      [[[
+        const raw = entity && entity.state;
+        const cls = {idle:'st-idle', listening:'st-listen', processing:'st-think', responding:'st-speak'}[raw] || 'st-idle';
+        const sp = variables.speaking_entity && states[variables.speaking_entity];
+        const speaking = !!sp && sp.state === 'on';
+        const shown = (cls === 'st-idle' && speaking) ? 'st-speak' : cls;
+        const size = variables.eye_size || '38vw';
+        return `<div class="hal-wrap ${shown}"><div class="hal-eye" style="width:${size}"><div class="hal-lens"></div></div></div>`;
+      ]]]
+  styles:
+    card:
+      - background: '#000'
+      - border: none
+      - border-radius: '0'
+      - box-shadow: none
+      - padding: '0'
+    grid:
+      - grid-template-areas: '"face"'
+    custom_fields:
+      face:
+        - width: '100%'
+  extra_styles: |
+    .hal-wrap { position:relative; width:100%; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .hal-eye { max-width:360px; aspect-ratio:1; border-radius:50%; background:#050505; display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 6px #191919, 0 0 0 10px #3a2a00; position:relative; }
+    .hal-lens { width:48%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 50% 44%,#fff 0%,#ff3b30 22%,#d00 46%,#3a0000 100%); box-shadow:0 0 26px 8px rgba(255,40,30,.55); position:relative; z-index:2; }
+    .st-idle .hal-lens { animation:hal-breathe 4.5s ease-in-out infinite; }
+    @keyframes hal-breathe { 0%,100%{filter:brightness(.6)} 50%{filter:brightness(1.05)} }
+    .st-listen .hal-lens { filter:brightness(1.2); }
+    .st-listen .hal-eye::after { content:""; position:absolute; inset:0; border-radius:50%; border:2px solid rgba(255,60,48,.75); animation:hal-ripple 1.8s ease-out infinite; }
+    @keyframes hal-ripple { 0%{transform:scale(1);opacity:.85} 100%{transform:scale(2.1);opacity:0} }
+    .st-think .hal-eye::before { content:""; position:absolute; inset:-5px; border-radius:50%; background:conic-gradient(from 0deg,transparent 0 288deg,rgba(255,60,48,.6) 330deg,transparent 360deg); animation:hal-spin 1.1s linear infinite; z-index:1; }
+    @keyframes hal-spin { to{transform:rotate(360deg)} }
+    .st-speak .hal-lens { animation:hal-speak .26s steps(2,end) infinite; }
+    @keyframes hal-speak { 0%{filter:brightness(1.3)} 50%{filter:brightness(.65)} 100%{filter:brightness(1.1)} }
+
+hal_eye_overlay:
+  template: hal_eye
+  variables:
+    active_entity: ""      # optional: entity that is `on` while the eye should show (e.g. a linger helper)
+    mute_entity: ""        # optional: entity that is `on` to suppress the overlay entirely
+  styles:
+    card:
+      # position:fixed escapes the dashboard flow and covers the HA header + sidebar.
+      - position: fixed
+      - top: 0
+      - left: 0
+      - right: 0
+      - bottom: 0
+      - z-index: 99999
+      - margin: 0
+      # Hidden (zero footprint, dashboard fully usable) unless HAL is active.
+      - display: |
+          [[[
+            const on = (id) => !!id && !!states[id] && states[id].state === 'on';
+            if (on(variables.mute_entity)) return 'none';
+            const sat = ['listening', 'processing', 'responding'].includes(entity && entity.state);
+            const ae = variables.active_entity;
+            const active = (ae && states[ae]) ? on(ae) : sat;
+            return (active || on(variables.speaking_entity)) ? 'block' : 'none';
+          ]]]
