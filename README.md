@@ -2,6 +2,8 @@
 
 A HAL-9000 eye that reacts to your voice assistant. It can also take over a wall tablet while HAL is talking, then hand the dashboard back exactly as you left it.
 
+Questions, ideas and screenshots of your setup are welcome in the [community forum thread](https://community.home-assistant.io/t/hal-9000-eye-that-takes-over-your-wall-tablet-while-assist-is-talking/1027916).
+
 ![HAL eye](media/hal-eye.gif)
 
 ## What it does
