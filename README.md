@@ -22,6 +22,8 @@ There are two [button-card](https://github.com/custom-cards/button-card) templat
 - **`hal_eye`** is the eye on its own. Put it on a panel view for a dedicated HAL screen.
 - **`hal_eye_overlay`** is the same eye as a full-screen takeover. Drop it onto any view. It stays hidden while HAL is idle. When you speak to HAL it covers the whole screen, including HA's header and sidebar, and when HAL goes quiet it disappears.
 
+<p align="center"><img src="media/hal-eye-takeover.gif" alt="The overlay taking over a dashboard and handing it back" width="300"></p>
+
 ## Requirements
 
 - [button-card](https://github.com/custom-cards/button-card), installed from HACS. Version 7 or later is recommended; older versions work, but see the note under [Options](#options).
